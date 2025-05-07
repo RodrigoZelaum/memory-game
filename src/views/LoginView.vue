@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
+import BaseButton from '@/components/button/BaseButton.vue'
+import iconGoogle from '../assets/icons/google-logo.svg'
 
 const auth = useAuthStore()
 const router = useRouter()
@@ -21,17 +23,22 @@ function handleLogout() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-4 mt-10">
-    <div v-if="auth.isAuthenticated">
-      <p>Bem-vindo, {{ auth.user?.name }}</p>
-      <button @click="handleLogout" class="bg-red-500 text-white px-4 py-2 rounded">
-        Logout
-      </button>
-    </div>
-    <div v-else>
-      <button @click="handleLogin" class="bg-green-500 text-white px-4 py-2 rounded">
-        Login
-      </button>
+  <div class="flex flex-col items-center justify-center h-screen bg-[primary] px-4">
+    <h1 class="text-2xl font-semibold mb-6 text-center">Jogo de Memória</h1>    
+    <BaseButton
+      v-if="!auth.isAuthenticated"
+      label="Acessar com Google"
+      :icon="iconGoogle"
+      :onClick="handleLogin"
+      className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
+    />
+    <div v-else class="flex flex-col items-center gap-4">
+      <p class="text-lg">Olá, <span class="font-semibold">{{ auth.user?.name }}</span></p>
+      <BaseButton
+        label="Logout"
+        :onClick="handleLogout"
+        className="bg-red-500 text-white hover:bg-red-600"
+      />
     </div>
   </div>
 </template>

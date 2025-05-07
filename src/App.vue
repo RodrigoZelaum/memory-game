@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.ts'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import ThemeToggle from '@/components/toggleTheme/ThemeToggle.vue'
 
 const auth = useAuthStore()
+
 
 onMounted(() => {
   auth.loadUser()
@@ -11,9 +13,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="flex-1 p-4">
-      <RouterView />
-  </main>
+  <ThemeToggle />
+  <RouterView />
 </template>
 
 <style scoped>

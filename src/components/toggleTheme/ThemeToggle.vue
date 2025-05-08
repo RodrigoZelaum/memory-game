@@ -8,8 +8,7 @@ const { theme, toggleTheme } = useTheme()
 
 <template>
   <button
-    @click="toggleTheme"
-    class="fixed top-4 right-4 bg-transparent border-none cursor-pointer z-50"
+    @click="toggleTheme"   
   >
     <FontAwesomeIcon
       :icon="theme === 'light' ? faMoon : faSun"

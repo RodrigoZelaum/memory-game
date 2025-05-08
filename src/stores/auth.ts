@@ -1,12 +1,13 @@
+// stores/auth.ts
 import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     isAuthenticated: false,
-    user: null as null | { name: string; email: string },
+    user: null as null | { name: string; email: string; picture?: string },
   }),
   actions: {
-    login(userData: { name: string; email: string }) {
+    login(userData: { name: string; email: string; picture?: string }) {
       this.isAuthenticated = true
       this.user = userData
       localStorage.setItem('user', JSON.stringify(userData))

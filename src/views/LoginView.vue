@@ -1,47 +1,45 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth'
 import { useRouter } from 'vue-router'
-import BaseButton from '@/components/button/BaseButton.vue'
-import iconGoogle from '../assets/icons/google-logo.svg'
+import { GoogleLogin, decodeCredential } from 'vue3-google-login'
+import logoMemory from '@/assets/images/logo-memory.png'
 
 const auth = useAuthStore()
 const router = useRouter()
 
-function handleLogin() {
-  const fakeUser = {
-    name: 'Rodrigo Ribeiro',
-    email: 'rodrigo@email.com'
-  }
-  auth.login(fakeUser)
-  router.push('/')
+interface DecodedCredential {
+  name: string;
+  email: string;
+  picture: string;
 }
 
-function handleLogout() {
-  auth.logout()
-  router.push('/login')
+function onGoogleResponse(response: { credential: string }) {
+  const userData = decodeCredential(response.credential) as DecodedCredential
+  auth.login({
+    name: userData.name,
+    email: userData.email,
+    picture: userData.picture
+  })
+  router.push('/')
 }
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center h-screen bg-[primary] px-4">
-    <h1 class="text-2xl font-semibold mb-6 text-center">Jogo de Memória</h1>    
-    <BaseButton
-      v-if="!auth.isAuthenticated"
-      label="Acessar com Google"
-      :icon="iconGoogle"
-      :onClick="handleLogin"
-      className="bg-white text-gray-700 border border-gray-300 hover:bg-gray-100"
-    />
-    <div v-else class="flex flex-col items-center gap-4">
-      <p class="text-lg">Olá, <span class="font-semibold">{{ auth.user?.name }}</span></p>
-      <BaseButton
-        label="Logout"
-        :onClick="handleLogout"
-        className="bg-red-500 text-white hover:bg-red-600"
+  <div class="flex items-center justify-center min-h-screen bg-surface dark:bg-surface-dark transition-colors px-6">
+    <div class="relative bg-gradient-to-br from-primary/80 to-secondary/80 dark:from-secondary/90 dark:to-primary/90 border border-border rounded-3xl 
+                shadow-xl p-10 w-full max-w-md text-center">
+      <div class="mb-6">
+        <img :src="logoMemory" alt="Memory Game Logo" class="mx-auto w-25 h-23"/>
+      </div>
+      <h1 class="text-3xl font-extrabold mb-4 text-primary dark:text-primary">Jogo de Memória</h1>
+      <GoogleLogin
+        v-if="!auth.user"
+        :callback="onGoogleResponse"
+        class="w-full mb-6 transform hover:scale-105 transition"
       />
+      <p v-else class="mt-4 text-primary dark:text-primary text-xl">
+        Olá, {{ auth.user.name }}!
+      </p>
     </div>
   </div>
 </template>
-
-<style scoped>
-</style>

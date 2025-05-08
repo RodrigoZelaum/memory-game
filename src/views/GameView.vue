@@ -106,8 +106,8 @@ onMounted(() => resetGame())
 
 <template>
   <div class="game-board-container p-4 min-h-screen bg-surface dark:bg-surface-dark transition-colors">
-    <h2 class="text-2xl font-semibold mb-4 text-center text-text-primary dark:text-text-primary">
-      Tabuleiro do Jogo
+    <h2 class="text-2xl font-semibold my-4 text-center text-text-primary dark:text-text-primary">
+      Jogo de Mamória
     </h2>
 
     <div v-if="loading" class="flex items-center justify-center h-64">

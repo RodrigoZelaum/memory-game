@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, reactive } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useDifficultyStore } from '@/stores/difficultyStore'
 import { fetchImages as fetchImagesFromService } from '@/services/gameService' 
 import GameCard from '@/components/card/GameCard.vue'
@@ -27,10 +27,11 @@ const MOCK_IMAGES = ref<string[]>([])
 
 const fetchImages = async () => {
   try {
-    const res = await fetchImagesFromService()
-    MOCK_IMAGES.value = res
+    const res = await fetchImagesFromService();
+    MOCK_IMAGES.value = res;
+    console.log("Imagens recebidas:", MOCK_IMAGES.value); // Verifique as URLs aqui
   } catch (error) {
-    alert(error)
+    alert(error);
   }
 }
 

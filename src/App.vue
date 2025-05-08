@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.ts'
-import { onMounted, ref } from 'vue'
-import ThemeToggle from '@/components/toggleTheme/ThemeToggle.vue'
+import { onMounted } from 'vue'
+import Navbar from './components/navbar/Navbar.vue'
 
 const auth = useAuthStore()
 
@@ -13,8 +13,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <ThemeToggle />
-  <RouterView />
+  <header>
+    <Navbar />
+  </header>
+  <body>    
+    <RouterView />
+  </body>
 </template>
 
 <style scoped>

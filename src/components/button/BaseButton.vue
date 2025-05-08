@@ -11,7 +11,7 @@ defineProps<{
   <button
     @click="onClick"
     :class="[
-      'flex items-center justify-center gap-2 px-4 py-2 rounded font-medium transition shadow',
+      'flex items-center justify-center gap-2 px-4 py-2 rounded font-medium transition shadow cursor-pointer',
       className
     ]"
   >

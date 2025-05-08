@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, reactive } from 'vue'
+import { useDifficultyStore } from '@/stores/difficultyStore'
+import { fetchImages as fetchImagesFromService } from '@/services/gameService' 
 import GameCard from '@/components/card/GameCard.vue'
 
 interface Card {
@@ -10,6 +12,7 @@ interface Card {
   uniqueId: number
 }
 
+const difficultyStore = useDifficultyStore();
 const cards = ref<Card[]>([])
 const loading = ref(true)
 const error = ref<string | null>(null)
@@ -19,12 +22,30 @@ let timerInterval: number
 const showSummaryModal = ref(false)
 const apiStatusMessage = ref<string | null>(null)
 const apiSubmitSuccess = ref(false)
+const MOCK_IMAGES = ref<string[]>([])
 
-const MOCK_IMAGES = ['🍎','🍌','🍒','🍇','🍓','🥝','🍍','🍑']
-const GRID_SIZE = 4
 
-const generateCards = () => {
-  const selected = MOCK_IMAGES.slice(0, GRID_SIZE*GRID_SIZE/2)
+const fetchImages = async () => {
+  try {
+    const res = await fetchImagesFromService()
+    MOCK_IMAGES.value = res
+  } catch (error) {
+    alert(error)
+  }
+}
+
+const totalPairs = computed(() => {
+  switch (difficultyStore.difficulty) {
+    case 'normal':
+      return 4
+    case 'hard':
+      return 8
+  }
+})
+
+const generateCards = async () => {  
+  await fetchImages()
+  const selected = MOCK_IMAGES.value.slice(0, totalPairs.value)
   let uid = 0
   const pairs = selected.flatMap((c,i) => [
     { id:i, content:c, isFlipped:false, isMatched:false, uniqueId:uid++ },
@@ -105,9 +126,9 @@ onMounted(() => resetGame())
 </script>
 
 <template>
-  <div class="game-board-container p-4 min-h-screen bg-surface dark:bg-surface-dark transition-colors">
-    <h2 class="text-2xl font-semibold my-4 text-center text-text-primary dark:text-text-primary">
-      Jogo de Mamória
+  <div class="game-board-container p-4 min-h-screen bg-surface transition-colors">
+    <h2 class="text-2xl font-semibold my-4 text-center text-primary">
+      Jogo de Memória
     </h2>
 
     <div v-if="loading" class="flex items-center justify-center h-64">
@@ -132,10 +153,10 @@ onMounted(() => resetGame())
     </div>
 
     <div class="fixed bottom-4 left-0 w-full flex justify-center gap-6">
-      <p class="text-text-primary dark:text-text-primary">
+      <p class="text-text-primary">
         Tentativas: <span class="font-bold">{{ attempts }}</span>
       </p>
-      <p class="text-text-primary dark:text-text-primary">
+      <p class="text-text-primary">
         Tempo: <span class="font-bold">{{ formattedTime }}</span>
       </p>
       <button
@@ -153,13 +174,13 @@ onMounted(() => resetGame())
     >
       <div class="bg-white dark:bg-surface-dark p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Parabéns!</h3>
-        <p class="text-text-primary dark:text-text-primary mb-2">
+        <p class="text-text-primary mb-2">
           Você completou o Jogo da Memória!
         </p>
-        <p class="text-text-primary dark:text-text-primary">
+        <p class="text-text-primary">
           Seu tempo: <span class="font-semibold">{{ formattedTime }}</span>
         </p>
-        <p class="text-text-primary dark:text-text-primary mb-6">
+        <p class="text-text-primary mb-6">
           Tentativas: <span class="font-semibold">{{ attempts }}</span>
         </p>
         <div

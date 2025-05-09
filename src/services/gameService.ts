@@ -10,7 +10,7 @@ export async function fetchImages(): Promise<string[]> {
     const response = await axios.get(UNSPLASH_API_URL, {
       params: {
         query: 'fruit',
-        per_page: 16,
+        per_page: 18,
         page: randomPage,
       },
       headers: {
@@ -18,11 +18,14 @@ export async function fetchImages(): Promise<string[]> {
       },
     });
 
-    const imageUrls = response.data.results.slice(0, 16).map((photo: any) => photo.urls.small);
-    console.log('imageUrls', imageUrls);
+    const imageUrls = response.data.results.slice(0, 18).map((photo: any) => photo.urls.small);
     return imageUrls;
   } catch (error) {
     console.error('Erro ao buscar imagens do Unsplash:', error);
     throw new Error('Falha ao buscar imagens do Unsplash');
   }
+}
+
+export function fetchImagesFromService(): any {
+  throw new Error('Function not implemented.');
 }

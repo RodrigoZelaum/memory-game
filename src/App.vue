@@ -13,13 +13,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
+  <div class="flex flex-col min-h-screen overflow-hidden">
     <Navbar />
-  </header>
-  <body>    
-    <RouterView />
-  </body>
+    <main class="flex-grow overflow-auto">
+      <RouterView />
+    </main>
+  </div>
 </template>
+
 
 <style scoped>
 </style>

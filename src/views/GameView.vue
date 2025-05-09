@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, onUnmounted } from 'vue'
 import { useDifficultyStore } from '@/stores/difficultyStore'
 import { fetchImages as fetchImagesFromService } from '@/services/gameService' 
 import GameCard from '@/components/card/GameCard.vue'
+import BaseButton from '@/components/button/BaseButton.vue'
 
 interface Card {
   id: number
@@ -22,14 +23,12 @@ let timerInterval: number
 const showSummaryModal = ref(false)
 const apiStatusMessage = ref<string | null>(null)
 const apiSubmitSuccess = ref(false)
-const MOCK_IMAGES = ref<string[]>([])
-
+const cardImages = ref<string[]>([])
 
 const fetchImages = async () => {
   try {
     const res = await fetchImagesFromService();
-    MOCK_IMAGES.value = res;
-    console.log("Imagens recebidas:", MOCK_IMAGES.value); // Verifique as URLs aqui
+    cardImages.value = res;
   } catch (error) {
     alert(error);
   }
@@ -38,15 +37,15 @@ const fetchImages = async () => {
 const totalPairs = computed(() => {
   switch (difficultyStore.difficulty) {
     case 'normal':
-      return 4
-    case 'hard':
       return 8
+    case 'hard':
+      return 18
   }
 })
 
 const generateCards = async () => {  
   await fetchImages()
-  const selected = MOCK_IMAGES.value.slice(0, totalPairs.value)
+  const selected = cardImages.value.slice(0, totalPairs.value)
   let uid = 0
   const pairs = selected.flatMap((c,i) => [
     { id:i, content:c, isFlipped:false, isMatched:false, uniqueId:uid++ },
@@ -82,27 +81,66 @@ const checkMatch = () => {
   }
 }
 
+const saveScore = () => {
+  const score = {
+    timestamp: Date.now(),
+    difficulty: difficultyStore.difficulty,
+    time: timer.value,
+    attempts: attempts.value
+  }
+
+  const existingScores = localStorage.getItem('memory-game-scores')
+  let scores: any[] = []
+
+  if (existingScores) {
+    try {
+      scores = JSON.parse(existingScores)
+    } catch {
+      scores = []
+    }
+  }
+
+  scores.push(score)
+  scores.sort((a, b) => a.time - b.time || a.attempts - b.attempts)
+  const topScores = scores.slice(0, 5)
+  
+  localStorage.setItem('memory-game-scores', JSON.stringify(topScores))
+}
+
 const endIfDone = async () => {
   if (cards.value.every(c=>c.isMatched)) {
     clearInterval(timerInterval)
+    saveScore()
     showSummaryModal.value = true
+
     try {
       apiStatusMessage.value = 'Enviando resultados...'
-      await new Promise((res, rej)=>
-        setTimeout(()=>Math.random()>0.2?res(null):rej(null),1500)
-      )
+      apiSubmitSuccess.value = false
+
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() > 0.2) {
+            resolve(true)
+          } else {
+            reject(new Error('Falha na conexão'))
+          }
+        }, 1500)
+      })
+      
       apiSubmitSuccess.value = true
       apiStatusMessage.value = 'Resultados enviados com sucesso!'
-    } catch {
+    } catch (error) {
       apiSubmitSuccess.value = false
       apiStatusMessage.value = 'Falha ao enviar resultados. Tente novamente.'
+      console.error('Erro ao enviar resultados:', error)
     }
   }
 }
 
 const startTimer = () => {
-  timer.value=0; clearInterval(timerInterval)
-  timerInterval = setInterval(()=> timer.value++,1000)
+  timer.value = 0
+  clearInterval(timerInterval)
+  timerInterval = window.setInterval(() => timer.value++, 1000)
 }
 
 const formattedTime = computed(() => {
@@ -112,10 +150,15 @@ const formattedTime = computed(() => {
 })
 
 const resetGame = () => {
-  loading.value=true; error.value=null; attempts.value=0
-  flipped=[]; showSummaryModal.value=false
-  apiStatusMessage.value=null; apiSubmitSuccess.value=false
-  generateCards(); startTimer()
+  loading.value=true
+  error.value=null
+  attempts.value=0
+  flipped=[]
+  showSummaryModal.value=false
+  apiStatusMessage.value=null
+  apiSubmitSuccess.value=false
+  generateCards() 
+  startTimer()
 }
 
 const restartGame = resetGame
@@ -127,13 +170,12 @@ onMounted(() => resetGame())
 </script>
 
 <template>
-  <div class="game-board-container p-4 min-h-screen bg-surface transition-colors">
-    <h2 class="text-2xl font-semibold my-4 text-center text-primary">
+  <div class="p-15 bg-surface transition-colors flex flex-col items-center justify-center min-h-screen">
+    <h2 class="text-2xl font-semibold my-6 text-center">
       Jogo de Memória
     </h2>
-
     <div v-if="loading" class="flex items-center justify-center h-64">
-      <svg class="animate-spin h-8 w-8 text-primary" viewBox="0 0 24 24">
+      <svg class="animate-spin h-8 w-8" viewBox="0 0 24 24">
         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"/>
         <path class="opacity-75" fill="currentColor"
               d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
@@ -141,7 +183,8 @@ onMounted(() => resetGame())
     </div>
       <div
       v-else
-      class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full max-w-xl mx-auto"
+      class="grid grid-cols-2  gap-4 w-full max-w-xl mx-auto"
+      :class="totalPairs === 18 ? 'sm:grid-cols-6' : 'sm:grid-cols-4'"
     >
       <GameCard
         v-for="card in cards"
@@ -152,36 +195,34 @@ onMounted(() => resetGame())
         @flip="flipCard(card.uniqueId)"
       />
     </div>
-
-    <div class="fixed bottom-4 left-0 w-full flex justify-center gap-6">
-      <p class="text-text-primary">
-        Tentativas: <span class="font-bold">{{ attempts }}</span>
-      </p>
-      <p class="text-text-primary">
-        Tempo: <span class="font-bold">{{ formattedTime }}</span>
-      </p>
-      <button
-        @click="restartGame"
-        class="bg-yellow-500 hover:bg-yellow-700 active:scale-95 text-white px-4 py-2 rounded transition"
-      >
-        Reiniciar
-      </button>
+    <div class="w-full flex flex-col items-center gap-4 py-4">
+      <div class="flex gap-6 text-lg">
+        <p>
+          Tentativas: <span class="font-bold">{{ attempts }}</span>
+        </p>
+        <p>
+          Tempo: <span class="font-bold">{{ formattedTime }}</span>
+        </p>
+      </div>    
+      <BaseButton
+        label="Reiniciar"
+        :onClick="restartGame"         
+        />
     </div>
 
-    <!-- Summary Modal -->
     <div
       v-if="showSummaryModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+      class="fixed inset-0 bg-[var(--surface)] bg-opacity-50 flex items-center justify-center p-4 z-50"
     >
-      <div class="bg-white dark:bg-surface-dark p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
+      <div class="bg[var(--text)] border-default shadow-default p-8 rounded-lg shadow-xl max-w-sm w-full text-center">
         <h3 class="text-2xl font-bold mb-4 text-green-600">Parabéns!</h3>
-        <p class="text-text-primary mb-2">
+        <p class="text mb-2">
           Você completou o Jogo da Memória!
         </p>
-        <p class="text-text-primary">
+        <p class="text">
           Seu tempo: <span class="font-semibold">{{ formattedTime }}</span>
         </p>
-        <p class="text-text-primary mb-6">
+        <p class="text mb-6">
           Tentativas: <span class="font-semibold">{{ attempts }}</span>
         </p>
         <div
@@ -194,12 +235,12 @@ onMounted(() => resetGame())
         >
           {{ apiStatusMessage }}
         </div>
-        <button
-          @click="closeSummaryAndRestart"
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition"
-        >
-          Jogar Novamente
-        </button>
+        <BaseButton
+          label="Jogar Novamente"          
+          :onClick="closeSummaryAndRestart" 
+          variant="main"   
+          class="mx-auto"      
+        />
       </div>
     </div>
   </div>

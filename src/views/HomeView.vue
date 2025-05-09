@@ -2,6 +2,7 @@
 import BaseButton from '@/components/button/BaseButton.vue';
 import trophy from '@/assets/images/trophy.png';
 import control from '@/assets/images/control.png';
+import rules from '@/assets/images/rules.png';
 import { useRouter } from 'vue-router';
 import { useDifficultyStore } from '@/stores/difficultyStore';
 import { ref, watch } from 'vue';
@@ -20,6 +21,10 @@ function startGame() {
 
 function showRanking() {
   router.push('/ranking');
+}
+
+function goAbout() {
+  router.push('/about');
 }
 </script>
 
@@ -60,6 +65,11 @@ function showRanking() {
           :icon="control"
           :onClick="startGame" 
           variant="main"         
+        />
+        <BaseButton
+          label="Como Jogar"
+          :icon="rules"
+          :onClick="goAbout"        
         />
         <BaseButton
           label="Ranking"

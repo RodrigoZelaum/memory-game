@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue';
 import HomeView from '@/views/HomeView.vue';
 import GameView from '@/views/GameView.vue';
 import RankingView from '@/views/RankingView.vue';
+import AboutView from '@/views/AboutView.vue';
 
 const isAuthenticated = () => {
   const auth = useAuthStore();
@@ -33,6 +34,12 @@ const routes = [
     path: '/ranking',
     name: 'Ranking',
     component: RankingView,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: AboutView,
     meta: { requiresAuth: true },
   },
 ];

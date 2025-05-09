@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: 'class',
@@ -6,16 +6,16 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: 'rgb(var(--primary) / <alpha-value>)',
-        secondary: 'rgb(var(--secondary) / <alpha-value>)',
-        surface: 'rgb(var(--surface) / <alpha-value>)',
-        border: 'rgb(var(--border) / <alpha-value>)',
-        'text-primary': 'rgb(var(--text-primary) / <alpha-value>)',
-        'text-secondary': 'rgb(var(--text-secondary) / <alpha-value>)',
+        primary: 'var(--primary)',
+        secondary: 'var(--secondary)',
+        surface: 'var(--surface)',
+        border: 'var(--border)',
+        'text-primary': 'var(--text-primary)',
+        'text-secondary': 'var(--text-secondary)',
       },
     },
   },
   plugins: [],
-}
+};
 
-export default config
+export default config;

@@ -14,11 +14,11 @@ defineProps<{
     @click="$emit('flip')"
     @keyup.enter="$emit('flip')"
   >
-    <div class="card-face card-front absolute inset-0 flex items-center justify-center text-white text-3xl bg-blue-500 rounded-lg">
+    <div class="card-face card-front absolute inset-0 flex items-center justify-center text-[var(--text)] text-3xl bg-[var(--accent)] rounded-lg">
       ?
     </div>
 
-    <div class="card-face card-back absolute inset-0 flex items-center justify-center text-3xl bg-orange-400 rounded-lg backface-hidden">
+    <div class="card-face card-back absolute inset-0 flex items-center justify-center text-3xl bg-[var(--surface)] rounded-lg backface-hidden">
       <img :src="content" class="w-full h-full object-cover rounded-lg" />
     </div>      
   </div>

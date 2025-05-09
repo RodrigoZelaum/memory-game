@@ -1,45 +1,137 @@
-# memory-game
+# Memory Game
 
-This template should help get you started developing with Vue 3 in Vite.
+## 📝 Descrição
 
-## Recommended IDE Setup
+Jogo da memória desenvolvido com **Vue 3**, **TypeScript**, **Pinia** e **Tailwind CSS**. O projeto inclui diferentes níveis de dificuldade, contagem de tempo e tentativas, além de armazenamento de pontuações.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## 🚀 Como Executar o Projeto
 
-## Type Support for `.vue` Imports in TS
+### Pré-requisitos
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- Node.js (versão 16 ou superior)
+- npm ou yarn
 
-## Customize configuration
+### Instalação
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Clone o repositório:
 
-## Project Setup
+```bash
+git clone https://github.com/RodrigoZelaum/memory-game
+cd memory-game
+```
 
-```sh
+Instale as dependências:
+
+```bash
 npm install
+# ou
+yarn install
 ```
 
-### Compile and Hot-Reload for Development
+Crie um arquivo `.env` na raiz do projeto com suas chaves de API:
 
-```sh
+```env
+VITE_API_KEY=sua_chave_aqui
+VITE_API_URL=https://api.exemplo.com
+```
+
+Inicie o servidor de desenvolvimento:
+
+```bash
 npm run dev
+# ou
+yarn dev
 ```
 
-### Type-Check, Compile and Minify for Production
+O projeto estará disponível em: [http://localhost:5173](http://localhost:5173)
 
-```sh
+## 🛠 Scripts Disponíveis
+
+### Desenvolvimento
+
+```bash
+npm run dev
+# ou
+yarn dev
+```
+
+### Build para Produção
+
+```bash
 npm run build
+# ou
+yarn build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+## 🧪 Testes
 
-```sh
-npm run test:unit
+### Executar todos os testes
+
+```bash
+npm run test
+# ou
+yarn run test
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## 🔧 Principais Decisões Técnicas
 
-```sh
-npm run lint
-```
+### Arquitetura
+
+- **Vue 3** com Composition API e `<script setup>`
+- **TypeScript** para tipagem estática
+- **Pinia** para gerenciamento de estado
+- **Tailwind CSS** para estilização utilitária
+
+### Funcionalidades Implementadas
+
+- **Diferentes Níveis de Dificuldade**
+
+  - **Normal**: 8 pares de cartas
+  - **Difícil**: 18 pares de cartas
+  - Configurado via store Pinia
+
+- **Temporizador e Contador de Tentativas**
+
+  - Implementado com `setInterval` reativo
+  - Formatação do tempo (MM\:SS)
+
+- **Persistência de Pontuações**
+
+  - Armazenamento no `localStorage`
+  - Exibição das melhores pontuações
+
+- **Integração com API Externa**
+
+  - Carregamento assíncrono de imagens
+  - Tratamento de erros e estados de carregamento
+
+### Testes
+
+- **Vitest** para testes unitários
+- **@vue/test-utils** para testes de componentes
+- Mocks para:
+
+  - API externa
+  - `localStorage`
+  - Timers (`setInterval` / `setTimeout`)
+
+### Otimizações
+
+- Lazy loading de componentes
+- Virtualização de lista para o modo difícil
+- Prefetching de imagens
+- Armazenamento em cache das imagens carregadas
+
+## 🌐 Variáveis de Ambiente
+
+O projeto utiliza as seguintes variáveis de ambiente (arquivo `.env`):
+
+| Variável     | Descrição                   | Exemplo                                            |
+| ------------ | --------------------------- | -------------------------------------------------- |
+| VITE_API_KEY | Chave para a API de imagens | abc123def456                                       |
+| VITE_API_URL | URL base da API de imagens  | [https://api.exemplo.com](https://api.exemplo.com) |
+
+## 📌 Melhorias Futuras
+
+- Adicionar modo multiplayer online
+- Implementar ranking global

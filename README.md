@@ -1,137 +1,137 @@
-📝 Descrição
-Jogo da memória desenvolvido com Vue 3, TypeScript, Pinia e Tailwind CSS. O projeto inclui diferentes níveis de dificuldade, contagem de tempo e tentativas, e armazenamento de pontuações.
+# Memory Game
 
-🚀 Como Executar o Projeto
-Pré-requisitos
-Node.js (versão 16 ou superior)
+## 📝 Descrição
 
-npm ou yarn
+Jogo da memória desenvolvido com **Vue 3**, **TypeScript**, **Pinia** e **Tailwind CSS**. O projeto inclui diferentes níveis de dificuldade, contagem de tempo e tentativas, além de armazenamento de pontuações.
 
-Instalação
+## 🚀 Como Executar o Projeto
+
+### Pré-requisitos
+
+- Node.js (versão 16 ou superior)
+- npm ou yarn
+
+### Instalação
+
 Clone o repositório:
 
-bash
-git clone https://github.com/seu-usuario/memory-game.git
+```bash
+git clone https://github.com/RodrigoZelaum/memory-game
 cd memory-game
+```
+
 Instale as dependências:
 
-bash
+```bash
 npm install
-
 # ou
-
 yarn install
-Crie um arquivo .env na raiz do projeto com suas chaves de API:
+```
 
-env
+Crie um arquivo `.env` na raiz do projeto com suas chaves de API:
+
+```env
 VITE_API_KEY=sua_chave_aqui
 VITE_API_URL=https://api.exemplo.com
+```
 
-bash
+Inicie o servidor de desenvolvimento:
+
+```bash
 npm run dev
-
 # ou
-
 yarn dev
+```
 
-O projeto estará disponível em: http://localhost:5173
+O projeto estará disponível em: [http://localhost:5173](http://localhost:5173)
 
-🛠 Scripts Disponíveis
-Desenvolvimento
-bash
+## 🛠 Scripts Disponíveis
+
+### Desenvolvimento
+
+```bash
 npm run dev
-
 # ou
-
 yarn dev
-Build para Produção
-bash
+```
+
+### Build para Produção
+
+```bash
 npm run build
-
 # ou
-
 yarn build
-Preview da Build
-bash
-npm run preview
+```
 
-# ou
+## 🧪 Testes
 
-yarn preview
-🧪 Testes
-bash
+### Executar todos os testes
 
-# Executar todos os testes
-
+```bash
 npm run test
-
 # ou
-
 yarn run test
+```
 
-🔧 Principais Decisões Técnicas
-Arquitetura
-Vue 3 com Composition API e <script setup>
+## 🔧 Principais Decisões Técnicas
 
-TypeScript para tipagem estática
+### Arquitetura
 
-Pinia para gerenciamento de estado
+- **Vue 3** com Composition API e `<script setup>`
+- **TypeScript** para tipagem estática
+- **Pinia** para gerenciamento de estado
+- **Tailwind CSS** para estilização utilitária
 
-Tailwind CSS para estilização utilitária
+### Funcionalidades Implementadas
 
-Funcionalidades Implementadas
-Diferentes Níveis de Dificuldade
+- **Diferentes Níveis de Dificuldade**
 
-Normal: 8 pares de cartas
+  - **Normal**: 8 pares de cartas
+  - **Difícil**: 18 pares de cartas
+  - Configurado via store Pinia
 
-Difícil: 18 pares de cartas
+- **Temporizador e Contador de Tentativas**
 
-Configurado via store Pinia
+  - Implementado com `setInterval` reativo
+  - Formatação do tempo (MM\:SS)
 
-Temporizador e Contador de Tentativas
+- **Persistência de Pontuações**
 
-Implementado com setInterval reativo
+  - Armazenamento no `localStorage`
+  - Exibição das melhores pontuações
 
-Formatação do tempo (MM:SS)
+- **Integração com API Externa**
 
-Persistência de Pontuações
+  - Carregamento assíncrono de imagens
+  - Tratamento de erros e estados de carregamento
 
-Armazenamento no localStorage
+### Testes
 
-Exibição das melhores pontuações
+- **Vitest** para testes unitários
+- **@vue/test-utils** para testes de componentes
+- Mocks para:
 
-Integração com API Externa
+  - API externa
+  - `localStorage`
+  - Timers (`setInterval` / `setTimeout`)
 
-Carregamento assíncrono de imagens
+### Otimizações
 
-Tratamento de erros e estados de carregamento
+- Lazy loading de componentes
+- Virtualização de lista para o modo difícil
+- Prefetching de imagens
+- Armazenamento em cache das imagens carregadas
 
-Testes
-Vitest para testes unitários
+## 🌐 Variáveis de Ambiente
 
-@vue/test-utils para testes de componentes
+O projeto utiliza as seguintes variáveis de ambiente (arquivo `.env`):
 
-Mocks para:
+| Variável     | Descrição                   | Exemplo                                            |
+| ------------ | --------------------------- | -------------------------------------------------- |
+| VITE_API_KEY | Chave para a API de imagens | abc123def456                                       |
+| VITE_API_URL | URL base da API de imagens  | [https://api.exemplo.com](https://api.exemplo.com) |
 
-API externa
+## 📌 Melhorias Futuras
 
-localStorage
-
-Timers (setInterval/setTimeout)
-
-Otimizações
-Lazy loading de componentes
-
-Virtualização de lista para o modo difícil
-
-Prefetching de imagens
-
-Armazenamento em cache das imagens carregadas
-
-🌐 Variáveis de Ambiente
-O projeto utiliza as seguintes variáveis de ambiente (arquivo .env):
-
-📌 Melhorias Futuras
-Adicionar modo multiplayer online
-
-Implementar ranking global
+- Adicionar modo multiplayer online
+- Implementar ranking global
